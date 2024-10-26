@@ -1,0 +1,13 @@
+.container {
+  margin: 0 auto;
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  ng-content {
+    flex: 1;
+  }
+  app-footer {
+    margin-top: auto;
+  }
+}

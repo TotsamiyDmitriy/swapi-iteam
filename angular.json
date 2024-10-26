@@ -52,7 +52,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/app/layout/themes/light-theme.scss",
+              "src/app/layout/themes/dark-theme.scss"
             ],
             "scripts": []
           },
