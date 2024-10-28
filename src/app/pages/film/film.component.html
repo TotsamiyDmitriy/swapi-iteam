@@ -1,1 +1,18 @@
-<p>film works!</p>
+<main>
+  <div class="container" *ngIf="film$ | async">
+    <div class="header-info">
+      <h1>{{ (film$ | async)?.title }}</h1>
+      <p>Directed by : {{ (film$ | async)?.director }}</p>
+      <p>Producers : {{ (film$ | async)?.producer }}</p>
+      <p>
+        Release date : {{ (film$ | async)?.release_date | date : "dd.MM.yyyy" }}
+      </p>
+      <hr />
+    </div>
+    <div class="desc">
+      <h2>Description</h2>
+      <p>{{ (film$ | async)?.opening_crawl }}</p>
+    </div>
+    <app-expansion [data]="characters$" [loading]="loading$"></app-expansion>
+  </div>
+</main>

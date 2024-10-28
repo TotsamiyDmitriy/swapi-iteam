@@ -1,5 +1,8 @@
-main {
-  margin-top: 60px;
+.header {
+  display: flex;
+  button {
+    margin-left: auto;
+  }
 }
 
 .error {

@@ -1,0 +1,19 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ film.title }}
+      </mat-panel-title>
+      <mat-panel-description>
+        Directed by:
+        {{ film.director }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p>{{ film.opening_crawl }}</p>
+    <mat-action-row>
+      <button mat-stroked-button [routerLink]="['film/', film.episode_id]">
+        Resolve
+      </button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>

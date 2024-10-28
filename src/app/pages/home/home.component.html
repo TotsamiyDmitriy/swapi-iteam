@@ -1,13 +1,10 @@
 <main>
-  <h1>Home works!</h1>
-  <section>
-    <div class="example-label">Basic</div>
-    <div class="example-button-row">
-      <button mat-button>Basic</button>
-      <button mat-button disabled>Disabled</button>
-      <a mat-raised-button href="https://www.google.com/" target="_blank"
-        >Link</a
-      >
-    </div>
+  <section class="films">
+    <h1>All films</h1>
+    <app-expansion
+      [data]="films$"
+      [loading]="loading$"
+      [error]="error$"
+    ></app-expansion>
   </section>
 </main>

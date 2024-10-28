@@ -1,0 +1,34 @@
+<mat-accordion *ngIf="data$ | async; else loading">
+  <ng-container *ngFor="let data of data$ | async | keyvalue">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ data.value.title }}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ data.value.desc }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <p>{{ data.value.expantionInfo }}</p>
+      <mat-action-row>
+        <button mat-stroked-button [routerLink]="data.value.routerLink">
+          {{ data.value.actionTitle }}
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </ng-container>
+</mat-accordion>
+
+<ng-template #loading>
+  <ng-container *ngIf="(loading$ | async) && !(error$ | async)">
+    <div class="loading">
+      <mat-spinner mode="indeterminate" class="loader" />
+    </div>
+  </ng-container>
+  <ng-container *ngIf="error$ | async">
+    <div class="error">
+      <p class="smile">>_<</p>
+      <p class="text">Sorry, we have a trouble..</p>
+    </div>
+  </ng-container>
+</ng-template>
