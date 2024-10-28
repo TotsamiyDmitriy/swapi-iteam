@@ -5,8 +5,9 @@ import { CharactersActions } from './actions/load-characters.actions';
 
 export const initialState:FilmState = {
 	films: null,
-  	characters: {},
+  	characters: null,
   	loading: false,
+    loadingChar : false,
   	error: null,
 	};
 
@@ -28,6 +29,13 @@ export const filmReducer = createReducer(
   }),
   on(FilmsActions.loadFilmsFailure, (state, payload) => ({ ...state, loading: false, error : payload.error })),
 
+  on(CharactersActions.loadCharacters, (state) => ({ ...state, loadingChar: true })),
+  on(CharactersActions.loadCharactersSuccess, (state, payload) => ({ ...state, loadingChar: false, characters: {...state.characters, [payload.filmId] : payload.characters} })),
+  on(CharactersActions.loadCharactersFailure, (state, payload) => ({ ...state, loadingChar: false, error : payload.error })),
 
-  on(CharactersActions.loadCharactersSuccess, (state, payload) => ({ ...state, loading: false, characters: payload.characters }))
+
+  on(CharactersActions.loadCharacters, (state) => ({ ...state, loadingChar: true })),
+  on(CharactersActions.loadCharactersSuccess, (state, payload) => ({ ...state, loadingChar: false, characters: {...state.characters, [payload.filmId] : payload.characters} })),
+  on(CharactersActions.loadCharactersFailure, (state, payload) => ({ ...state, loadingChar: false, error : payload.error })),
+
 );

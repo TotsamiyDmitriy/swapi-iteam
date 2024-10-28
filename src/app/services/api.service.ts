@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Character, Film, GetData } from '../types/swapi.types';
 import { State, Store } from '@ngrx/store';
-import { EMPTY, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, count, EMPTY, forkJoin, map, Observable, of, retry, switchMap, throwError } from 'rxjs';
 import { selectFilmById } from '../store/selectors/selectors';
 
 @Injectable({
@@ -28,7 +28,11 @@ export class ApiService {
    return this.store.select(selectFilmById(id)).pipe(map((film) => film ? film.characters : null),
   switchMap((char) => {
     if (char) {
-      return forkJoin(char?.map(url => this.http.get<Character>(url)))
+      return forkJoin(char?.map(url => this.http.get<Character>(url).pipe(retry({count: 3, delay:3000}),catchError((err) => {
+        return throwError(() => err)
+      })
+    )
+  ))
     }
     return EMPTY
   }))

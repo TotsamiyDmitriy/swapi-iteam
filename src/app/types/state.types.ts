@@ -4,5 +4,6 @@ export interface FilmState {
 	films: { [id: string]: Film } | null;
 	characters: { [id: string]: Character[] } | null;
 	loading: boolean;
+	loadingChar: boolean;
 	error: any;
   }
