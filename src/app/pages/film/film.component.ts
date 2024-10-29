@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Film } from '../../types/swapi.types';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, tap } from 'rxjs';
@@ -14,12 +14,13 @@ import { CharactersActions } from '../../store/actions/load-characters.actions';
   standalone: true,
   imports: [CommonModule, ExpansionComponent],
   templateUrl: './film.component.html',
-  styleUrl: './film.component.scss'
+  styleUrl: './film.component.scss',
+  changeDetection : ChangeDetectionStrategy.OnPush,
 })
 export class FilmComponent implements OnInit {
   
   film$!: Observable<Film | null>
-  characters$! : Observable<DataType>
+  characters$! : Observable<DataType | null>
   loading$! : Observable<boolean>
   error$! : Observable<any>
 

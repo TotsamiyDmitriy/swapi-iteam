@@ -27,7 +27,6 @@ export const filmReducer = createReducer(
     stateFilms[payload.film.episode_id] = payload.film;
     return { ...state, films: { ...stateFilms }, loading: false };
   }),
-  on(FilmsActions.loadFilmsFailure, (state, payload) => ({ ...state, loading: false, error : payload.error })),
 
   on(CharactersActions.loadCharacters, (state) => ({ ...state, loadingChar: true })),
   on(CharactersActions.loadCharactersSuccess, (state, payload) => ( { ...state, loadingChar: false, characters: state.characters ?  [...state.characters, ...payload.characters] : [...payload.characters] })),

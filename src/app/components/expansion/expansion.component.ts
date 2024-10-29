@@ -24,7 +24,7 @@ export type DataType = {
   imports: [MatAccordion, MatExpansionModule, MatButtonModule, RouterModule, CommonModule, MatProgressSpinnerModule],
   templateUrl: './expansion.component.html',
   styleUrl: './expansion.component.scss',
-  
+  changeDetection: ChangeDetectionStrategy.OnPush,  
 })
 export class ExpansionComponent {
   @Input('data') data$!: Observable<DataType | null>

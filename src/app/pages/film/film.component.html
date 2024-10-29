@@ -13,10 +13,6 @@
       <h2>Description</h2>
       <p>{{ (film$ | async)?.opening_crawl }}</p>
     </div>
-    <app-expansion
-      [data]="characters$"
-      [loading]="loading$"
-      [error]="error$"
-    ></app-expansion>
+    <app-expansion [data]="characters$" [loading]="loading$"></app-expansion>
   </div>
 </main>
