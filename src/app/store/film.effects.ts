@@ -1,10 +1,10 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects"
 import { ApiService } from "../services/api.service"
 import { FilmsActions } from "./actions/load-films.actions"
-import { catchError, EMPTY, map, mergeMap, of, retry, switchMap, take, withLatestFrom } from "rxjs"
+import { catchError, count, delay, EMPTY, map, mergeMap, of, retry, switchMap, take, withLatestFrom } from "rxjs"
 import { Injectable } from "@angular/core"
-import { Store } from "@ngrx/store"
-import { selectAllFilms, selectCharactersByFilmId, selectFilmById } from "./selectors/selectors"
+import { select, Store } from "@ngrx/store"
+import { selectAllFilms, selectCharacterById, selectCharactersByFilmId, selectFilmById } from "./selectors/selectors"
 import { CharactersActions } from "./actions/load-characters.actions"
 
 
@@ -29,7 +29,7 @@ export class FilmEffects {
 	))
 )
 
-loadCharacters$ = createEffect(() =>
+loadCharactersByFilm$ = createEffect(() =>
 	this.actions$.pipe(
 	  ofType(CharactersActions.loadCharacters),
 	  mergeMap(action =>
@@ -60,6 +60,7 @@ loadCharacters$ = createEffect(() =>
 					})
 					return CharactersActions.loadCharactersSuccess({ characters })
 				}),
+				  retry({count: 3, delay:3000}),
 				  catchError(error => of(CharactersActions.loadCharactersFailure({ error })))
 				);
 			  })
@@ -68,5 +69,28 @@ loadCharacters$ = createEffect(() =>
 		)
 	  )
 	)
+  );
+
+  loadCharacter$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CharactersActions.loadCharacter),
+      mergeMap((action) => 
+        this.store.select(selectCharacterById(action.id)).pipe(
+          map((cachedCharacter) => ({ action, cachedCharacter }))
+        )
+      ),
+      mergeMap(({ action, cachedCharacter }) => {
+        if (cachedCharacter) {
+          return of(CharactersActions.loadCharacterSuccess({ character: cachedCharacter }));
+        }
+          if (action.id) {
+          return this.api.getCharactersByIds([action.id]).pipe(
+            map((character) => CharactersActions.loadCharacterSuccess({ character : character[0] })),
+            catchError((error) => of(CharactersActions.loadCharacterFailure({ error })))
+          );
+        }
+		return of(CharactersActions.loadCharacterFailure({error : ''}))
+      })
+    )
   );
 }

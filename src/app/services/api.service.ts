@@ -25,6 +25,6 @@ export class ApiService {
   }
 
   getCharactersByIds(ids :string[]) {
-   return forkJoin(ids.map((id) =>this.http.get<Character>(`${this.apiUrl}/people/${id}`))).pipe(catchError((err) => throwError(() => err)))
+   return forkJoin(ids.map((id) =>this.http.get<Character>(`${this.apiUrl}/people/${id}`))).pipe(map(() => ),catchError((err) => throwError(() => err)))
 }
 }

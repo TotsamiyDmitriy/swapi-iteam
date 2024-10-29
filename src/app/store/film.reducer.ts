@@ -34,7 +34,7 @@ export const filmReducer = createReducer(
 
 
   on(CharactersActions.loadCharacter, (state) => ({ ...state, loadingChar: true })),
-  on(CharactersActions.loadCharacterSuccess, (state, payload) => ({ ...state, loadingChar: false, characters:state.characters ? [...state.characters, payload.character] :  [payload.character] })),
+  on(CharactersActions.loadCharacterSuccess, (state, payload) => ({ ...state, loadingChar: false, characters: state.characters ? [...state.characters, payload.character] :  [payload.character] })),
   on(CharactersActions.loadCharacterFailure, (state, payload) => ({ ...state, loadingChar: false, error : payload.error })),
 
 );

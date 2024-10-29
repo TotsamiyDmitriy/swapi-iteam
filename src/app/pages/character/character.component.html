@@ -1,1 +1,24 @@
-<p>character works!</p>
+<main>
+  <div>{{ character$ | async | json }}</div>
+  <div>{{ films$ | async | json }}</div>
+  <div class="container" *ngIf="character$ | async">
+    <div class="header-info">
+      <h1>{{ (character$ | async)?.name }}</h1>
+      <p>
+        Birth date :
+        {{ (character$ | async)?.birth_year }}
+      </p>
+      <p>Height : {{ (character$ | async)?.height }}</p>
+      <p>Gender : {{ (character$ | async)?.gender }}</p>
+      <hr />
+    </div>
+    <div class="desc">
+      <h2>Films</h2>
+    </div>
+    <app-expansion
+      [data]="films$"
+      [loading]="loading$"
+      [error]="error$"
+    ></app-expansion>
+  </div>
+</main>

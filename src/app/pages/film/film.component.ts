@@ -37,10 +37,12 @@ export class FilmComponent implements OnInit {
       if(this.id) {
         this.film$ = this.store.select(selectFilmById(this.id))
         this.film$.pipe(tap((film) =>{
+
+          (film)
            if (film) {
             this.store.dispatch(CharactersActions.loadCharacters({id :this.id}))
           this.characters$ = this.store.select(selectCharactersByFilmId(this.id)).pipe(map((chars) => {
-            let acc : DataType = {}
+            let acc : DataType | null = null
             chars?.map((char) => {
               acc = {...acc}
               acc[char.id] = {
@@ -52,7 +54,8 @@ export class FilmComponent implements OnInit {
               }
             })
             return acc
-          }))
+          })
+        )
            }
           }
         )).subscribe()
