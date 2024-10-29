@@ -14,6 +14,12 @@ export const selectFilmLoading = createSelector(selectFilmState, (state: FilmSta
 
 export const selectFilmError = createSelector(selectFilmState, (state: FilmState) => state.error);
 
-export const selectCharactersByFilmId = (filmId: string | null) => createSelector(selectFilmState, (state: FilmState) => state.characters && filmId ? state.characters[filmId] : null)
+export const selectCharactersByFilmId = (filmId: string | null) => createSelector(selectFilmState, (state: FilmState) => {
+  if (filmId && state.films) {
+    const filmCharacters = state.films[filmId].characters.map((char) => char.split('/')[char.split('/').length-2])
+    return state.characters?.filter((val, id) => filmCharacters.includes(val.id))
+  }
+  return null
+})
 
-export const selectCharLoading = createSelector(selectFilmState, (state: FilmState) => state.loadingChar);
+export const selectCharactersLoading = createSelector(selectFilmState, (state: FilmState) => state.loadingChar);

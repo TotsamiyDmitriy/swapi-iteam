@@ -24,17 +24,7 @@ export class ApiService {
     return this.http.get<Film>(`${this.apiUrl}/films/${id}`)
   }
 
-  getCharactersByFilmId(id :string) {
-   return this.store.select(selectFilmById(id)).pipe(map((film) => film ? film.characters : null),
-  switchMap((char) => {
-    if (char) {
-      return forkJoin(char?.map(url => this.http.get<Character>(url).pipe(retry({count: 3, delay:3000}),catchError((err) => {
-        return throwError(() => err)
-      })
-    )
-  ))
-    }
-    return EMPTY
-  }))
+  getCharactersByIds(ids :string[]) {
+   return forkJoin(ids.map((id) =>this.http.get<Character>(`${this.apiUrl}/people/${id}`))).pipe(catchError((err) => throwError((err : any) => err)))
 }
 }

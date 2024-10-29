@@ -1,12 +1,11 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects"
 import { ApiService } from "../services/api.service"
 import { FilmsActions } from "./actions/load-films.actions"
-import { catchError, EMPTY, map, mergeMap, of, retry, switchMap, take, tap, withLatestFrom } from "rxjs"
+import { catchError, EMPTY, map, mergeMap, of, retry, switchMap, take, withLatestFrom } from "rxjs"
 import { Injectable } from "@angular/core"
 import { Store } from "@ngrx/store"
-import { selectAllFilms, selectCharactersByFilmId } from "./selectors/selectors"
+import { selectAllFilms, selectCharactersByFilmId, selectFilmById } from "./selectors/selectors"
 import { CharactersActions } from "./actions/load-characters.actions"
-import { DataType } from "../components/expansion/expansion.component"
 
 
   @Injectable()
@@ -33,24 +32,41 @@ export class FilmEffects {
 loadCharacters$ = createEffect(() =>
 	this.actions$.pipe(
 	  ofType(CharactersActions.loadCharacters),
-	  mergeMap(action => 
+	  mergeMap(action =>
 		this.store.select(selectCharactersByFilmId(action.id)).pipe(
 		  take(1),
-		  mergeMap(cachedCharacters => {
-			if (cachedCharacters && cachedCharacters.length > 0) {
-			  return of(CharactersActions.loadCharactersSuccess({ characters: cachedCharacters, filmId: action.id as string }));
-			}
-  
-			if (action.id) {
-			  return this.api.getCharactersByFilmId(action.id).pipe(
-				map(characters => CharactersActions.loadCharactersSuccess({ characters, filmId: action.id as string })),
-				catchError(error => of(CharactersActions.loadCharactersFailure({ error })))
-			  );
-			}
-			return of(CharactersActions.loadCharactersFailure({ error: '' }));
+		  switchMap(cachedCharacters => {
+			return this.store.select(selectFilmById(action.id)).pipe(
+			  take(1),
+			  switchMap(film => {
+				if (!film) {
+				  return of(CharactersActions.loadCharactersFailure({ error: 'Фильм не найден' }));
+				}
+				const characterIds = film.characters.map(url => {
+				  const splited = url.split('/');
+				  return splited[splited.length - 2];
+				});
+				const cachedIds = cachedCharacters?.map(char => char.id) || [];
+                const missingCharacterIds = characterIds.filter(id => !cachedIds.includes(id));
+				if (missingCharacterIds.length === 0 && cachedCharacters) {
+					return of(CharactersActions.loadCharactersSuccess({ characters: cachedCharacters }));
+				  }
+
+				return this.api.getCharactersByIds(missingCharacterIds).pipe(
+				  map(characters => {
+					characters = characters.map((char) => {
+						const splited = char.url.split('/')
+						return {...char, id : splited[splited.length - 2]}
+					})
+					return CharactersActions.loadCharactersSuccess({ characters })
+				}),
+				  catchError(error => of(CharactersActions.loadCharactersFailure({ error })))
+				);
+			  })
+			);
 		  })
 		)
 	  )
 	)
-  ); 
+  );
 }

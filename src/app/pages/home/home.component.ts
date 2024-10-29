@@ -13,7 +13,7 @@ import { DataType, ExpansionComponent } from '../../components/expansion/expansi
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MatButtonModule, ExpansionComponent, CommonModule, MatCardModule, RouterModule, MatProgressSpinnerModule],
+  imports: [MatButtonModule, ExpansionComponent, CommonModule, MatCardModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -42,8 +42,8 @@ export class HomeComponent implements OnInit {
         })} 
         return acc
       }));
-    this.loading$ = this.store.select(selectFilmLoading).pipe(tap((d) => console.log(d)));
-    this.error$ = this.store.select(selectFilmError).pipe(tap((d) => console.log(d)))
+    this.loading$ = this.store.select(selectFilmLoading)
+    this.error$ = this.store.select(selectFilmError)
   }
 
  ngOnInit(): void {
