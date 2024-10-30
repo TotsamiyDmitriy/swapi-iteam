@@ -6,10 +6,11 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideStore } from '@ngrx/store';
 import { filmReducer } from './store/film.reducer';
 import { provideEffects } from '@ngrx/effects';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { FilmEffects } from './store/film.effects';
+import { httpInterceptor } from './interceptors/http.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideHttpClient(), provideAnimationsAsync(), provideStore({ film: filmReducer }), provideEffects([FilmEffects]), provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })]
+  providers: [provideRouter(routes), provideHttpClient(withInterceptors([httpInterceptor])), provideAnimationsAsync(), provideStore({ film: filmReducer }), provideEffects([FilmEffects]), provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })]
 };

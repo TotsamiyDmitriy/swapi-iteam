@@ -1,7 +1,7 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects"
 import { ApiService } from "../services/api.service"
 import { FilmsActions } from "./actions/load-films.actions"
-import { catchError, count, delay, EMPTY, map, mergeMap, of, retry, switchMap, take, withLatestFrom } from "rxjs"
+import { catchError, concatMap, count, delay, EMPTY, map, mergeMap, of, retry, switchMap, take, withLatestFrom } from "rxjs"
 import { Injectable } from "@angular/core"
 import { select, Store } from "@ngrx/store"
 import { selectAllFilms, selectCharacterById, selectCharactersByFilmId, selectFilmById } from "./selectors/selectors"
@@ -40,7 +40,7 @@ loadCharactersByFilm$ = createEffect(() =>
 			  take(1),
 			  switchMap(film => {
 				if (!film) {
-				  return of(CharactersActions.loadCharactersFailure({ error: 'Фильм не найден' }));
+				  return of(CharactersActions.loadCharactersFailure({ error: '' }));
 				}
 				const characterIds = film.characters.map(url => {
 				  const splited = url.split('/');
@@ -49,12 +49,12 @@ loadCharactersByFilm$ = createEffect(() =>
 				const cachedIds = cachedCharacters?.map(char => char.id) || [];
                 const missingCharacterIds = characterIds.filter(id => !cachedIds.includes(id));
 				if (missingCharacterIds.length === 0 && cachedCharacters) {
-					return of(CharactersActions.loadCharactersSuccess({ characters: cachedCharacters }));
+					return of(CharactersActions.loadCharactersSuccess({ characters: [] }));
 				  }
 
 				return this.api.getCharactersByIds(missingCharacterIds).pipe(
 				  map(characters => {
-					characters = characters.map((char) => {
+					characters = characters.map((char : any) => {
 						const splited = char.url.split('/')
 						return {...char, id : splited[splited.length - 2]}
 					})
@@ -74,8 +74,9 @@ loadCharactersByFilm$ = createEffect(() =>
   loadCharacter$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CharactersActions.loadCharacter),
-      mergeMap((action) => 
+      concatMap((action) =>
         this.store.select(selectCharacterById(action.id)).pipe(
+			take(1),
           map((cachedCharacter) => ({ action, cachedCharacter }))
         )
       ),
@@ -85,8 +86,11 @@ loadCharactersByFilm$ = createEffect(() =>
         }
           if (action.id) {
           return this.api.getCharactersByIds([action.id]).pipe(
-            map((character) => CharactersActions.loadCharacterSuccess({ character : character[0] })),
-            catchError((error) => of(CharactersActions.loadCharacterFailure({ error })))
+            map((character) => {
+				character[0].id = action.id ? action.id : ''
+				return CharactersActions.loadCharacterSuccess({ character : character[0] })}),
+            retry({count: 3, delay : 3000}),
+			catchError((error) => of(CharactersActions.loadCharacterFailure({ error })))
           );
         }
 		return of(CharactersActions.loadCharacterFailure({error : ''}))

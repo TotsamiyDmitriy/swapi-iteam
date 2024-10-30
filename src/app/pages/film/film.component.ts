@@ -27,7 +27,7 @@ export class FilmComponent implements OnInit {
   id: string | null = null;
 
   constructor(private route : ActivatedRoute, private store : Store, private router : Router) {
-  this.loading$ = this.store.select(selectCharactersLoading);
+  this.loading$ = this.store.select(selectCharactersLoading)
   this.error$ = this.store.select(selectFilmError);
   }
   ngOnInit(): void {
@@ -36,10 +36,8 @@ export class FilmComponent implements OnInit {
       this.store.dispatch(FilmsActions.loadFilms())
       if(this.id) {
         this.film$ = this.store.select(selectFilmById(this.id))
-        this.film$.pipe(tap((film) =>{
-
-          (film)
-           if (film) {
+        this.film$.pipe(tap((film) => {
+          if (film === undefined) this.router.navigate(['/not-found'], {skipLocationChange : true})
             this.store.dispatch(CharactersActions.loadCharacters({id :this.id}))
           this.characters$ = this.store.select(selectCharactersByFilmId(this.id)).pipe(map((chars) => {
             let acc : DataType | null = null
@@ -57,7 +55,7 @@ export class FilmComponent implements OnInit {
           })
         )
            }
-          }
+     
         )).subscribe()
       } else {
         this.router.navigate(['/'], {skipLocationChange : true})

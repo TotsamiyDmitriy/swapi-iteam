@@ -18,7 +18,7 @@ export interface Film {
 }
 
 export interface Character {
-	id :string,
+	id :string
 	name: string,
 	height: number,
 	mass : number,

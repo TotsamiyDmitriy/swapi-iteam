@@ -1,6 +1,4 @@
 <main>
-  <div>{{ character$ | async | json }}</div>
-  <div>{{ films$ | async | json }}</div>
   <div class="container" *ngIf="character$ | async">
     <div class="header-info">
       <h1>{{ (character$ | async)?.name }}</h1>
