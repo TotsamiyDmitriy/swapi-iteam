@@ -1,3 +1,7 @@
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="pLoading$ | async"
+></mat-progress-bar>
 <main>
   <div class="container" *ngIf="film$ | async">
     <div class="header-info">

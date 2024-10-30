@@ -8,11 +8,12 @@ import { CharactersActions } from '../../store/actions/load-characters.actions';
 import { DataType, ExpansionComponent } from '../../components/expansion/expansion.component';
 import { CommonModule } from '@angular/common';
 import { FilmsActions } from '../../store/actions/load-films.actions';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-character',
   standalone: true,
-  imports: [ExpansionComponent, CommonModule],
+  imports: [ExpansionComponent, CommonModule, MatProgressBarModule],
   templateUrl: './character.component.html',
   styleUrl: './character.component.scss',
   changeDetection : ChangeDetectionStrategy.OnPush,
@@ -21,12 +22,14 @@ export class CharacterComponent implements OnInit {
   films$!: Observable<DataType | null>
   character$! : Observable<Character | null>
   loading$! : Observable<boolean>
+  pLoading$: Observable<boolean>
   error$! : Observable<any>
 
   id: string | null = null;
 
   constructor(private store : Store, private route : ActivatedRoute) {
-    this.loading$ = this.store.select(selectFilmLoading).pipe(tap((s) => console.log(s)));
+    this.loading$ = this.store.select(selectFilmLoading)
+    this.pLoading$ = this.store.select(selectCharactersLoading)
     this.error$ = this.store.select(selectFilmError);
   }
 

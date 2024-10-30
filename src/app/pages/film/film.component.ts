@@ -1,18 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Film } from '../../types/swapi.types';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable, tap } from 'rxjs';
+import { catchError, count, delay, EMPTY, map, Observable, retry, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCharactersByFilmId, selectCharactersLoading, selectFilmById, selectFilmError, selectFilmLoading } from '../../store/selectors/selectors';
 import { CommonModule } from '@angular/common';
 import { FilmsActions } from '../../store/actions/load-films.actions';
 import { DataType, ExpansionComponent } from '../../components/expansion/expansion.component';
 import { CharactersActions } from '../../store/actions/load-characters.actions';
+import {MatProgressBarModule} from '@angular/material/progress-bar'
 
 @Component({
   selector: 'app-film',
   standalone: true,
-  imports: [CommonModule, ExpansionComponent],
+  imports: [CommonModule, ExpansionComponent, MatProgressBarModule],
   templateUrl: './film.component.html',
   styleUrl: './film.component.scss',
   changeDetection : ChangeDetectionStrategy.OnPush,
@@ -22,13 +23,17 @@ export class FilmComponent implements OnInit {
   film$!: Observable<Film | null>
   characters$! : Observable<DataType | null>
   loading$! : Observable<boolean>
+  pLoading$! : Observable<boolean>
   error$! : Observable<any>
 
   id: string | null = null;
 
   constructor(private route : ActivatedRoute, private store : Store, private router : Router) {
   this.loading$ = this.store.select(selectCharactersLoading)
+  this.pLoading$ = this.store.select(selectFilmLoading)
   this.error$ = this.store.select(selectFilmError);
+
+
   }
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -56,7 +61,8 @@ export class FilmComponent implements OnInit {
         )
            }
      
-        )).subscribe()
+        ),
+       ).subscribe()
       } else {
         this.router.navigate(['/'], {skipLocationChange : true})
       }
