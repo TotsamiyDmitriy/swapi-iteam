@@ -1,10 +1,42 @@
 @use "@angular/material" as mat;
 
-@import "app/layout/themes/dark-theme.scss";
-
-@import "app/layout/themes/light-theme.scss";
-
 @include mat.core();
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+
+$dark-primary: mat.define-palette(mat.$red-palette, 700, 900, 500);
+$dark-accent: mat.define-palette(mat.$orange-palette, 600, 800, 400);
+$dark-warn: mat.define-palette(mat.$deep-orange-palette);
+
+$dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $dark-primary,
+      accent: $dark-accent,
+      warn: $dark-warn,
+      background: mat.define-palette(mat.$grey-palette, 800),
+      foreground: (
+        base: #ffffff,
+        divider: rgba(255, 255, 255, 0.12),
+        disabled: rgba(255, 255, 255, 0.3),
+        hint: rgba(255, 255, 255, 0.3),
+        secondary: rgba(255, 255, 255, 0.7),
+        icon: rgba(255, 255, 255, 0.7),
+      ),
+      typography: (
+        plain-family: "Roboto, sans-serif",
+        brand-family: "Roboto, sans-serif",
+        base: #fff,
+      ),
+    ),
+  )
+);
+
+.dark-theme {
+  background-color: #1d1d1d;
+  @include mat.all-component-themes($dark-theme);
+}
 
 html,
 body {
