@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { catchError, EMPTY, filter, map, Observable, switchMap, take, tap, throwError } from 'rxjs';
-import { Character, Film } from '../../types/swapi.types';
+import { map, Observable, tap } from 'rxjs';
+import { Character } from '../../types/swapi.types';
 import { Store } from '@ngrx/store';
 import { selectCharacterById, selectCharactersLoading, selectFilmError, selectFilmLoading, selectFilmsByCharId } from '../../store/selectors/selectors';
 import { ActivatedRoute } from '@angular/router';

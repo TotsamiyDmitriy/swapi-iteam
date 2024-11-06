@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Film } from '../../types/swapi.types';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, count, delay, EMPTY, map, Observable, retry, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCharactersByFilmId, selectCharactersLoading, selectFilmById, selectFilmError, selectFilmLoading } from '../../store/selectors/selectors';
 import { CommonModule } from '@angular/common';

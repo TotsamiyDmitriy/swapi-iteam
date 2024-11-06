@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from "@angular/material/button"
 import { FilmsActions } from '../../store/actions/load-films.actions';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import {MatCardModule} from '@angular/material/card'
+import { MatCardModule } from '@angular/material/card'
 import { Store } from '@ngrx/store';
 import { selectAllFilms, selectFilmError, selectFilmLoading } from '../../store/selectors/selectors';
 import { RouterModule } from '@angular/router';

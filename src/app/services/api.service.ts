@@ -1,17 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Character, Film, GetData } from '../types/swapi.types';
-import { State, Store } from '@ngrx/store';
-import { catchError, count, EMPTY, forkJoin, map, Observable, of, retry, switchMap, throwError } from 'rxjs';
-import { selectFilmById } from '../store/selectors/selectors';
-
+import { catchError, forkJoin, Observable, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
   private apiUrl = 'https://swapi.dev/api'
-  constructor(private http : HttpClient, private store : Store) {
+  constructor(private http : HttpClient) {
   }
 
   cache$! : Observable<any>
